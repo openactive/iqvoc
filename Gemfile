@@ -47,7 +47,7 @@ gem 'autoprefixer-rails', '~> 6.5.1.1'
 # comment out those you do don't need or use a different Gemfile
 gem 'mysql2', '~> 0.3.13'
 gem 'sqlite3'
-gem 'pg'
+#gem 'pg'
 
 group :development do
   gem 'view_marker'

@@ -191,7 +191,6 @@ GEM
       mini_portile2 (~> 2.3.0)
     nokogiri (1.8.2-java)
     parallel (1.4.1)
-    pg (0.19.0)
     poltergeist (1.6.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -395,7 +394,6 @@ DEPENDENCIES
   maruku
   mysql2 (~> 0.3.13)
   nokogiri (~> 1.8.1)
-  pg
   poltergeist (~> 1.6.0)
   pry-byebug (~> 1.1.2)
   pry-rails

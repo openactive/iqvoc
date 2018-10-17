@@ -37,3 +37,9 @@ Iqvoc.default_rdf_namespace_helper_modules << IqvocModuleHelper
 
 Iqvoc.export_path = Rails.root.join('public/export')
 Iqvoc.upload_path = Rails.root.join('public/uploads')
+
+Iqvoc.config.register_setting('languages.pref_labeling', ['en'])
+Iqvoc.config.register_setting('languages.further_labelings.Labeling::SKOS::AltLabel', ['en'])
+Iqvoc.config.register_setting('languages.notes', ['en'])
+Iqvoc::Concept.broader_relation_class_name  = 'Concept::Relation::SKOS::Broader::Poly'
+
