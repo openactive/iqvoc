@@ -46,10 +46,11 @@ gem 'autoprefixer-rails', '~> 6.5.1.1'
 # database adapters
 # comment out those you do don't need or use a different Gemfile
 gem 'mysql2', '~> 0.3.13'
-gem 'sqlite3'
+#gem 'sqlite3'
 #gem 'pg'
 
 group :development do
+  gem 'sqlite3'
   gem 'view_marker'
   gem 'better_errors'
   gem 'web-console'
