@@ -99,6 +99,7 @@ class SkosImporter
       second_level_types["#{klass.rdf_namespace}:#{klass.rdf_predicate}"] = klass
     end
 
+    puts 'SkosImporter: Importing triples...'
     @logger.info 'SkosImporter: Importing triples...'
     file.each_with_index do |line, index|
       extracted_triple = *extract_triple(line)
@@ -108,6 +109,7 @@ class SkosImporter
       end
 
       unless has_valid_origin?(extracted_triple)
+        @logger.warn "SkosImporter: #{extracted_triple.first[1..-1]}"
         @logger.warn "SkosImporter: Invalid origin. Skipping #{extracted_triple.join(' ')}"
         next
       end
@@ -122,6 +124,7 @@ class SkosImporter
       tranform_blank_node(origin, bnode_struct)
     end
 
+    puts "Computing 'forward' defined triples..."
     @logger.info "Computing 'forward' defined triples..."
     @unknown_second_level_triples.each do |line|
       import_second_level_objects(second_level_types, true, line)
@@ -129,7 +132,8 @@ class SkosImporter
 
     first_import_step_done = Time.now
     @logger.info "Basic import done (took #{(first_import_step_done - start).to_i} seconds)."
-
+    puts "Basic import done (took #{(first_import_step_done - start).to_i} seconds)."
+    
     published = publish
 
     done = Time.now
@@ -249,6 +253,7 @@ class SkosImporter
     begin
       types[predicate].build_from_rdf(subject, predicate, object)
     rescue Exception => e
+      @logger.warn e.backtrace
       @logger.warn "#{e.class.name}: #{e.message}. Skipping entry ':#{subject} #{predicate} #{object}.'"
     end
   end
