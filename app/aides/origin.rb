@@ -19,7 +19,8 @@ class Origin
 
   def initialize(value = nil)
     self.initial_value = value
-    self.value = "_#{SecureRandom.hex(4)}"
+    #self.value = "_#{SecureRandom.hex(4)}"
+    self.value = "_#{SecureRandom.uuid}"
   end
 
   def valid?
