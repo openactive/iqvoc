@@ -20,18 +20,16 @@ class Concepts::OpenactiveController < ConceptsController
     authorize! :read, Iqvoc::Concept.base_class
 
     scope = Iqvoc::Concept.base_class
-    scope = scope.published
-
     # only select unexpired concepts
     # TODO decide handling of expired concepts for OA list
-    scope = scope.not_expired
+    scope = scope.published.not_expired.includes(:broader_relations, :narrower_relations, :notes, :notations, :alt_labels, :pref_labels)
 
     @concepts = scope
 
     # When in single query mode, AR handles ALL includes to be loaded by that
     # one query. We don't want that! So let's do it manually :-)
-    ActiveRecord::Associations::Preloader.new.preload(@concepts,
-        Iqvoc::Concept.base_class.default_includes + [:pref_labels])
+#    ActiveRecord::Associations::Preloader.new.preload(@concepts,
+#        Iqvoc::Concept.base_class.default_includes + [])
 
     @concepts.to_a.sort_by! {|c| c.pref_label }
 
@@ -39,7 +37,6 @@ class Concepts::OpenactiveController < ConceptsController
       format.jsonld do
         concepts = @concepts.select { |c| can? :read, c }.map do |c|
           url = "https://openactive.io/activity-list/#{c.origin[1..-1]}"
-          definition = c.notes_for_class(Note::SKOS::Definition).empty? ? "" : c.notes_for_class(Note::SKOS::Definition).first.value
           broader = []
           c.broader_relations.each do |rel|
             broader << "https://openactive.io/activity-list/#{rel.target.origin[1..-1]}"
@@ -56,15 +53,16 @@ class Concepts::OpenactiveController < ConceptsController
           }
           concept[:broader] = broader if broader.any?
           concept[:narrower] = narrower if narrower.any?
-          concept[:definition] = definition if definition != ""
-          concept[:notation] = c.notations.first.value if c.notations.any?
+          c.notes_for_class(Note::SKOS::Definition).each do |n|
+            concept[:definition] = n.value
+          end
+          c.notations.each do |n|
+            concept[:notation] = n.value
+          end
           concept[:topConceptOf] = "https://openactive.io/activity-list" if c.top_term?
-          if c.alt_labels.any?
-            alt = []
-            c.alt_labels.each do |l|
-              alt << l.value
-            end
-            concept[:altLabel] = alt
+          c.alt_labels.each do |l|
+            concept[:altLabel] ||= []
+            concept[:altLabel] << l.value
           end
           concept
         end
