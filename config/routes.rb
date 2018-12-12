@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     get 'alphabetical_concepts(/:prefix)' => 'concepts/alphabetical#index', as: 'alphabetical_concepts'
     get 'untranslated_concepts/:prefix'   => 'concepts/untranslated#index', as: 'untranslated_concepts'
     get 'hierarchical_concepts' => 'concepts/hierarchical#index', as: 'hierarchical_concepts'
+    get 'openactive_concepts' => 'concepts/openactive#index', as: 'openactive_concepts'
     get 'expired_concepts' => 'concepts/expired#index', as: 'expired_concepts'
 
     get 'dashboard' => 'dashboard#concept_index', as: 'dashboard'
